@@ -1,34 +1,108 @@
 package src;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Principal {
 
     public static void main(String[] args) {
-
-        Autor autor1 = new Autor(1, "Vicente Paulo", LocalDate.of(1985, 9, 22));
-        System.out.println(autor1);
-
-
+        Biblioteca biblioteca = new Biblioteca();
+        Autor autor1, autor2;
+        Livro livroSelecionado, livro1, livro2, livro3;
         Object[] opcoes = {"Sim", "Não"};
-        while (true){
+        String[] opcoesOK_Cancelar = {"OK", "Cancelar"};
+        JTextField campoTexto = new JTextField(10);
+        int idLivro, okCancelar, resposta;
+        String nomeUsuario;
+        List<Livro> livrosDisponiveis;
+        JComboBox<Livro> comboBoxLivros;
 
-            int resposta = JOptionPane.showOptionDialog(null,
+        autor1 = new Autor(1, "Vicente Paulo", LocalDate.of(1985, 9, 22));
+        autor2 = new Autor(2, "Palloma Guimaraes", LocalDate.of(1993, 2, 28));
+
+        biblioteca.adicionarAutor(autor1);
+        biblioteca.adicionarAutor(autor2);
+
+        livro1 = new Livro(1, "Direito constitucional", true, autor1, LocalDate.of(1999, 5, 14), LocalDate.now());
+        livro2 = new Livro(2, "DNA Empreendedor", true, autor2, LocalDate.of(2021, 2, 27), LocalDate.now());
+        livro3 = new Livro(3, "Fundos Imobiliarios do ZERO", true, autor2, LocalDate.of(2023, 8, 17), LocalDate.now());
+
+        biblioteca.adicionarLivro(livro1);
+        biblioteca.adicionarLivro(livro2);
+        biblioteca.adicionarLivro(livro3);
+
+        while (true) {
+
+            resposta = JOptionPane.showOptionDialog(null,
                     "Deseja ver os livros disponíveis?",
                     "Sistema de Livraria ",
-                    JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null, opcoes, opcoes[0]);
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
 
             if (resposta == JOptionPane.YES_OPTION) {
-                System.out.println("Você escolheu Sim.");
-            } else if (resposta == JOptionPane.NO_OPTION) {
-                System.out.println("Obrigado por utilizar o sistema da biblioteca.");
-                break;
-            } else {
-                System.out.println("Obrigado por utilizar o sistema da biblioteca.");
+                livrosDisponiveis = biblioteca.listarLivrosDisponiveis();
+
+                if (livrosDisponiveis.isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "No momento não há livros disponíveis.",
+                            "Aviso",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    resposta = JOptionPane.CLOSED_OPTION;
+                } else {
+                    comboBoxLivros = new JComboBox<>(livrosDisponiveis.toArray(new Livro[0]));
+
+                    JOptionPane.showOptionDialog(
+                            null,
+                            comboBoxLivros,
+                            "Livros disponíveis, selecione um Livro",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            opcoesOK_Cancelar,
+                            opcoesOK_Cancelar[0]
+                    );
+                    idLivro = Integer.parseInt(comboBoxLivros.getSelectedItem().toString().substring(3, 4));
+                    livroSelecionado = biblioteca.buscarLivroPorId(idLivro);
+
+                    if (livroSelecionado != null && livroSelecionado.isDisponivel()) {
+
+                        okCancelar = JOptionPane.showOptionDialog(
+                                null,
+                                campoTexto,
+                                "Digite seu nome",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.PLAIN_MESSAGE,
+                                null,
+                                opcoesOK_Cancelar,
+                                opcoesOK_Cancelar[0]
+                        );
+                        if (okCancelar == 0) {
+                            nomeUsuario = campoTexto.getText();
+                            biblioteca.emprestarLivro(livroSelecionado, nomeUsuario);
+                            JOptionPane.showMessageDialog(null, "O livro " + livroSelecionado.getTitulo() + " foi emprestado para " + nomeUsuario);
+                            campoTexto.setText("");
+                            okCancelar = -1;
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Livro não encontrado ou não disponível para empréstimo.");
+                    }
+                }
+
+            }
+            if (resposta == JOptionPane.NO_OPTION || resposta == JOptionPane.CLOSED_OPTION) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Obrigado por utilizar o sistema da biblioteca.",
+                        "Aviso",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
                 break;
             }
 
         }
+
     }
 }
+
