@@ -1,5 +1,3 @@
-package src;
-
 import javax.swing.*;
 import java.time.LocalDate;
 import java.util.List;
