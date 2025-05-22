@@ -13,6 +13,11 @@ public class Autor {
         this.dataNascimento = dataNascimento;
     }
 
+    public Autor(String nome, LocalDate dataNascimento) {
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
+    }
+
     public int getId() {
         return id;
     }

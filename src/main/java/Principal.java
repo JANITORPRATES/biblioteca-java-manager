@@ -6,7 +6,34 @@ public class Principal {
 
     public static void main(String[] args) {
         Biblioteca biblioteca = new Biblioteca();
-        Autor autor1, autor2;
+        Autor autor3, autor4;
+        GerenciadorConexao.conectar();
+
+        AutorRepository autorRepository = new AutorRepository();
+        autor3 = new Autor("Ariano Suassuna3", LocalDate.of(1927, 6, 16));
+        autor4 = new Autor("Carlos Drummond de Andrade4", LocalDate.of(1902, 10, 31));
+        //autorRepository.incluir(autor3);
+        //autorRepository.incluir(autor4);
+
+        String novoNome = "Paulo Coelho";
+        LocalDate novaDataNascimento = LocalDate.of(1947,8,24);
+
+        //autorRepository.alterar(autor3.getId(), novoNome, Date.valueOf(novaDataNascimento));
+        //autorRepository.excluir(8);
+
+        Autor autorBusca = autorRepository.buscar(8);
+        if(autorBusca != null){
+            System.out.println(autorBusca);
+        } else{
+            System.out.println("Não foi possível localizar o autor com o id informado");
+        }
+
+        List<Autor> autores = autorRepository.listar();
+        for(Autor a : autores){
+            System.out.println(a);
+        }
+
+
         Livro livroSelecionado, livro1, livro2, livro3;
         Object[] opcoes = {"Sim", "Não"};
         String[] opcoesOK_Cancelar = {"OK", "Cancelar"};
@@ -16,15 +43,15 @@ public class Principal {
         List<Livro> livrosDisponiveis;
         JComboBox<Livro> comboBoxLivros;
 
-        autor1 = new Autor(1, "Vicente Paulo", LocalDate.of(1985, 9, 22));
-        autor2 = new Autor(2, "Palloma Guimaraes", LocalDate.of(1993, 2, 28));
+        autor3 = new Autor(1, "Vicente Paulo", LocalDate.of(1985, 9, 22));
+        autor4 = new Autor(2, "Palloma Guimaraes", LocalDate.of(1993, 2, 28));
 
-        biblioteca.adicionarAutor(autor1);
-        biblioteca.adicionarAutor(autor2);
+        biblioteca.adicionarAutor(autor3);
+        biblioteca.adicionarAutor(autor4);
 
-        livro1 = new Livro(1, "Direito constitucional", true, autor1, LocalDate.of(1999, 5, 14), LocalDate.now());
-        livro2 = new Livro(2, "DNA Empreendedor", true, autor2, LocalDate.of(2021, 2, 27), LocalDate.now());
-        livro3 = new Livro(3, "Fundos Imobiliarios do ZERO", true, autor2, LocalDate.of(2023, 8, 17), LocalDate.now());
+        livro1 = new Livro(1, "Direito constitucional", true, autor3, LocalDate.of(1999, 5, 14), LocalDate.now());
+        livro2 = new Livro(2, "DNA Empreendedor", true, autor4, LocalDate.of(2021, 2, 27), LocalDate.now());
+        livro3 = new Livro(3, "Fundos Imobiliarios do ZERO", true, autor4, LocalDate.of(2023, 8, 17), LocalDate.now());
 
         biblioteca.adicionarLivro(livro1);
         biblioteca.adicionarLivro(livro2);
